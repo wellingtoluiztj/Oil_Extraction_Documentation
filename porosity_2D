@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Nov 23 15:07:31 2021
+@author: wsantos
+This file.py extract the digital points from an image to use as a rock model
+fluid dynamics simulation. 
+In the end we need to have the same porosity
+"""
+#====packages====
+import cv2
+import numpy as np
+import os
+import pandas as pd
+import seaborn as sea
+
+
+
+#====extract cordinates from image====
+#Import image
+an_image = cv2.imread("Pore_1.png")
+
+#Convert to gray scale
+img = cv2.cvtColor(an_image, cv2.COLOR_BGR2GRAY)
+
+
+pts = np.argwhere(img==0)
+
+soma_zeros = np.sum(an_image==0)
+forma = np.shape(img)
+
+soma_vac = np.sum(an_image==255)
+forma = np.shape(img)
+sea.heatmap(img==0)
+
+porosity = soma_vac/(soma_vac + soma_zeros)
+print(porosity)
