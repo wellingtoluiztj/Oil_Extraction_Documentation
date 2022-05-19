@@ -17,7 +17,7 @@ import pandas as pd
 import seaborn as sea
 
 #Import image
-an_image = cv2.imread("Pore_11.png")
+an_image = cv2.imread("Pores_24.png")
 
 '''
 Resize Resolution
@@ -41,6 +41,7 @@ for i in range (len(ttt)):
         if ttt[i,j] == 0:
             coord.append([j, len(img)-i])
 coord
+coord = np.array(coord)
 
 file = open('obst-wall.d90', 'w')
 np.savetxt(file, coord, fmt = '%i')
@@ -63,7 +64,5 @@ soma_zeros
 
 porosity = soma_vac/(soma_vac + soma_zeros)
 print(porosity)
-
-
 
 
