@@ -10,28 +10,33 @@ In the end we need to have the same porosity
 #====packages====
 import cv2
 import numpy as np
+import time
+from tqdm import tqdm
 import os
 import pandas as pd
 import seaborn as sea
 
-
-
-#====extract cordinates from image====
 #Import image
 an_image = cv2.imread("Pore_1.png")
-
+#Resize Resolution
+img2 = cv2.resize(an_image,(0,0),fx=2,fy=2)
 #Convert to gray scale
 img = cv2.cvtColor(an_image, cv2.COLOR_BGR2GRAY)
 
 
 pts = np.argwhere(img==0)
 
-soma_zeros = np.sum(an_image==0)
-forma = np.shape(img)
 
+soma_zeros = np.sum(an_image==0)
 soma_vac = np.sum(an_image==255)
 forma = np.shape(img)
+
+
 sea.heatmap(img==0)
+
+soma_zeros
 
 porosity = soma_vac/(soma_vac + soma_zeros)
 print(porosity)
+
+
