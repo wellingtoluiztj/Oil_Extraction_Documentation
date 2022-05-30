@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri May 27 18:26:55 2022
+
+@author: welli
+"""
+
+'''
+Draw 3D geometries spaced
+'''
+import math
+import numpy as np
+from skimage.draw import disk
+import matplotlib.pyplot as plt
+import random
+from skimage.draw import (line, polygon, disk,
+                          circle_perimeter,
+                          ellipse, ellipse_perimeter,
+                          bezier_curve)
+
+#Resolution(matrix dimension)
+shape_3D = (5, 5, 5)
+img = np.zeros(shape_3D, dtype=np.uint8)
+
+'''
+
+'''
+rr, cc = ellipse_perimeter(5, 5, 5, 5, orientation=math.pi / 4.)
+img[rr, cc, :] = (1, 0, 1)
+
+img[rr, cc, :] = (1, 1, 1)
+
+ax1.imshow(img)
+ax1.set_title('No anti-aliasing')
+ax1.axis('off')
+
+sphere
