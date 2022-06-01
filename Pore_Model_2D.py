@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 31 10:15:19 2022
+
+@author: wsantos
+"""
+
 # -*- coding: utf-8 -*-
 """
 Created on Thu May 26 11:10:34 2022
@@ -14,19 +22,26 @@ Draw 2D geometries spaced
 '''
 
 #Resolution(matrix dimension)
-shape = (120, 120)
+r = 150
+shape = ((2*r)+10, (2*r)+10)
 
 #numpy.zeros(shape, dtype=float, order = 'C', *, like = None)
 #Return a new array of given shape type, filled with zeros
-img = np.zeros(shape, dtype=np.uint8)
+img1 = np.zeros(shape, dtype=np.uint8)
+img2 = np.zeros(shape, dtype=np.uint8)
 
-#
-raio, centro = disk((55, 55), 60, shape = shape)
-img[raio, centro]=1
+R = 130
+raio, centro = disk((r,r), r, shape = shape)
+raio2, centro2 = disk((R,R), R, shape = shape)
 
+
+img1[raio, centro]=1
+img2[raio2, centro2]=1
 
 #Stack arrays in sequence vertically
-rock_matrix = np.hstack((np.vstack((img,img)), np.vstack((img,img))))
+rock_matrix = np.hstack((np.vstack((img2,img1,img2)), np.vstack((img1,img1, img2)), np.vstack((img1,img1,img2))))
+
+
 
 '''
 Extract Coordinates
@@ -42,8 +57,9 @@ for i in range(len(rock_matrix)):
 
 p = np.array(p)
 
+x_inlet = 20 
 file = open("obst-wall.d90", "w")
-np.savetxt(file, p, fmt='%i')
+np.savetxt(file, p + x_inlet, fmt='%i')
 
 
 '''
