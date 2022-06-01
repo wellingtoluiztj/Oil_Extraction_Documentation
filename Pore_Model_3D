@@ -1,37 +1,54 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri May 27 18:26:55 2022
+Created on Wed Jun  1 15:22:32 2022
 
 @author: welli
 """
-
-'''
-Draw 3D geometries spaced
-'''
-import math
 import numpy as np
-from skimage.draw import disk
 import matplotlib.pyplot as plt
-import random
-from skimage.draw import (line, polygon, disk,
-                          circle_perimeter,
-                          ellipse, ellipse_perimeter,
-                          bezier_curve)
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-#Resolution(matrix dimension)
-shape_3D = (5, 5, 5)
-img = np.zeros(shape_3D, dtype=np.uint8)
+from skimage import measure
+from skimage.draw import ellipsoid
 
-'''
 
-'''
-rr, cc = ellipse_perimeter(5, 5, 5, 5, orientation=math.pi / 4.)
-img[rr, cc, :] = (1, 0, 1)
+# Generate a level set about zero of two identical ellipsoids in 3D
+ellipse_3D = ellipsoid(10, 10, 10, levelset=True)
 
-img[rr, cc, :] = (1, 1, 1)
 
-ax1.imshow(img)
-ax1.set_title('No anti-aliasing')
-ax1.axis('off')
+concat = np.dstack([ellipse_3D, ellipse_3D, ellipse_3D])
+coord = []
+for i in range(len(concat[0][:][:])):
+    for j in range(len(concat[:][0][:])):
+        for k in range(len(concat[:][:][0])):
+            if concat[i,j,k] < 1.19:
+                coord.append([i,j,k]) 
 
-sphere
+            
+file = open('obst-wall_3D.d90', 'w')
+np.savetxt(file, coord, fmt = '%i')
+
+
+# Use marching cubes to obtain the surface mesh of these ellipsoids
+verts, faces, normals, values = measure.marching_cubes(concat, 0.0001)
+
+# Display resulting triangular mesh using Matplotlib. This can also be done
+# with mayavi (see skimage.measure.marching_cubes_lewiner docstring).
+fig = plt.figure(figsize=(20, 20))
+ax = fig.add_subplot(111, projection='3d')
+
+# Fancy indexing: verts[faces] to generate a collection of triangles
+mesh = Poly3DCollection(verts[faces])
+mesh.set_edgecolor('k')
+ax.add_collection3d(mesh)
+
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.set_zlabel("z")
+
+ax.set_xlim(0, 60)  # a = 6 (times two for 2nd ellipsoid)
+ax.set_ylim(0, 60)  # b = 10
+ax.set_zlim(0, 60)  # c = 16
+
+plt.tight_layout()
+plt.show()
